@@ -1,67 +1,55 @@
 import tkinter as tk
 import math
-import time
 import random
+import time
 
 # ========== 自定义设置 ==========
-# 爱心里要显示的文字（可以自己改）
-text_list = ["爱", "你", "永", "远", "不", "变", "❤️", "保持好心情", "天天开心"]
-# 窗口大小（文字的大小）
-win_width = 120
-win_height = 50
-# 窗口颜色（随机彩色）
-colors = ['#FFB6C1', '#FFC0CB', '#FF69B4', '#FF1493', '#DB7093', '#FFA07A', '#FFA500', '#FFFF99', '#98FB98', '#87CEFA']
+text_list = ["爱", "你", "永", "远", "❤️", "开", "心", "每", "一", "天"]
+win_width = 110
+win_height = 45
+colors = ['#FFB6C1', '#FFC0CB', '#FF69B4', '#FF1493', '#DB7093', '#FFA07A']
 # ==============================
 
-# 生成爱心上的点
-def generate_heart_points(num_points=150):
+def generate_heart_points(num_points=80):
     points = []
     for i in range(num_points):
         t = i * (2 * math.pi) / num_points
-        # 爱心参数方程
         x = 16 * math.sin(t)**3
         y = 13 * math.cos(t) - 5 * math.cos(2*t) - 2 * math.cos(3*t) - math.cos(4*t)
-        # 缩放，让爱心更合适
-        scale = 25
+        scale = 22
         points.append((x * scale, -y * scale))
     return points
 
-# 创建窗口并排列成爱心
 def create_heart_windows():
     root = tk.Tk()
-    root.withdraw()  # 隐藏主窗口
-    all_windows = []
-    points = generate_heart_points(len(text_list) * 10)  # 生成足够多的点
-
-    for i, (x, y) in enumerate(points):
-        # 随机选文字和颜色
-        text = random.choice(text_list)
-        color = random.choice(colors)
-        
-        # 创建新窗口
-        win = tk.Toplevel()
-        win.title("")
-        win.geometry(f"{win_width}x{win_height}+{int(root.winfo_screenwidth()/2 + x)}+{int(root.winfo_screenheight()/2 + y - 100)}")
-        win.configure(bg=color)
-        
-        # 窗口里加文字
-        label = tk.Label(win, text=text, bg=color, font=("微软雅黑", 12, "bold"), fg="white")
-        label.pack(expand=True)
-        
-        win.update()
-        all_windows.append(win)
-        time.sleep(0.02)  # 窗口慢慢出现的效果
+    root.withdraw()
+    screen_w = root.winfo_screenwidth()
+    screen_h = root.winfo_screenheight()
     
-    # 保持窗口显示
-    time.sleep(10)
-    # 关闭所有窗口
-    for win in all_windows:
-        win.destroy()
+    windows = []
+    points = generate_heart_points(80)
+    
+    for (x, y) in points:
+        txt = random.choice(text_list)
+        c = random.choice(colors)
+        
+        win = tk.Toplevel()
+        win.geometry(f"{win_width}x{win_height}+{int(screen_w/2 + x)}+{int(screen_h/2 + y - 100)}")
+        win.config(bg=c)
+        
+        lbl = tk.Label(win, text=txt, bg=c, fg="white", font=("微软雅黑", 11, "bold"))
+        lbl.pack(expand=True)
+        
+        windows.append(win)
+        win.update()
+        time.sleep(0.02)
+
+    root.mainloop()  # 关键修复：让窗口不闪退
 
 if __name__ == "__main__":
     print("即将开始弹窗，倒计时3秒...")
-    for count in range(3, 0, -1):
-        print(f"倒计时：{count} 秒")
+    for i in range(3, 0, -1):
+        print(f"倒计时：{i} 秒")
         time.sleep(1)
     print("开始啦！")
     create_heart_windows()
